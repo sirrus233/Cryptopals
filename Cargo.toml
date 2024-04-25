@@ -7,4 +7,5 @@ edition = "2021"
 
 [dependencies]
 base64 = "0.22.0"
+counter = "0.5.7"
 hex = "0.4.3"

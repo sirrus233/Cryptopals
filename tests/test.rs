@@ -1,9 +1,16 @@
-use cryptopals;
-
 #[test]
 fn challenge_1_1_hex_to_base64() {
     let bytes = cryptopals::read_hex_file("data/challenge_1_1.txt");
     let result = cryptopals::bytes_to_base64(bytes);
     let expected = "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t";
     assert_eq!(result, expected);
+}
+
+#[test]
+fn challenge_1_2_fixed_xor() {
+    let bytes1 = cryptopals::read_hex_file("data/challenge_1_2a.txt");
+    let bytes2 = cryptopals::read_hex_file("data/challenge_1_2b.txt");
+    let result = cryptopals::fixed_xor(bytes1, bytes2);
+    let expected = hex::decode("746865206b696420646f6e277420706c6179").unwrap();
+    assert_eq!(result, expected)
 }

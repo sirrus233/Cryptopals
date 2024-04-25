@@ -1,5 +1,4 @@
 use base64::{engine::general_purpose::STANDARD as base64, Engine};
-use hex;
 use std::fs;
 
 pub fn read_hex_file(path: &str) -> Vec<u8> {
@@ -16,4 +15,12 @@ pub fn read_hex_file(path: &str) -> Vec<u8> {
 
 pub fn bytes_to_base64(bytes: Vec<u8>) -> String {
     base64.encode(bytes)
+}
+
+pub fn fixed_xor(bytes1: Vec<u8>, bytes2: Vec<u8>) -> Vec<u8> {
+    bytes1
+        .iter()
+        .zip(bytes2.iter())
+        .map(|(&byte1, &byte2)| byte1 ^ byte2)
+        .collect()
 }

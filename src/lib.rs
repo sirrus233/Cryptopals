@@ -28,7 +28,7 @@ pub fn fixed_xor(bytes1: &[u8], bytes2: &[u8]) -> Vec<u8> {
     bytes1
         .iter()
         .zip(bytes2.iter())
-        .map(|(&byte1, &byte2)| byte1 ^ byte2)
+        .map(|(byte1, byte2)| byte1 ^ byte2)
         .collect()
 }
 
@@ -37,7 +37,7 @@ fn repeating_key(ciphertext: &[u8], key: &[u8]) -> Vec<u8> {
 }
 
 pub fn decrypt_single_byte_xor(ciphertext: &[u8], key: u8) -> Vec<u8> {
-    fixed_xor(&ciphertext, &repeating_key(&ciphertext, &vec![key]))
+    fixed_xor(ciphertext, &repeating_key(ciphertext, &vec![key]))
 }
 
 pub fn break_single_byte_xor(ciphertext: &[u8]) -> Vec<u8> {
@@ -47,6 +47,6 @@ pub fn break_single_byte_xor(ciphertext: &[u8]) -> Vec<u8> {
         .min_by(|(_, a), (_, b)| a.partial_cmp(b).unwrap())
         .unwrap()
     {
-        (key, _) => decrypt_single_byte_xor(&ciphertext, key as u8),
+        (key, _) => decrypt_single_byte_xor(ciphertext, key as u8),
     }
 }

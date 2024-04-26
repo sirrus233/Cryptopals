@@ -4,16 +4,29 @@ use std::fs;
 mod scoring;
 use scoring::score_english_plaintext;
 
-pub fn read_hex_file(path: &str) -> Vec<u8> {
-    let contents = match fs::read_to_string(path) {
+fn read_file(path: &str) -> String {
+    match fs::read_to_string(path) {
         Err(e) => panic!("Couldn't read {}: {}", path, e),
         Ok(contents) => contents,
-    };
+    }
+}
 
-    match hex::decode(&contents) {
-        Err(e) => panic!("Couldn't decode byte-string: {}", e),
+fn decode_hex(hex_string: &str) -> Vec<u8> {
+    match hex::decode(hex_string) {
+        Err(e) => panic!("Couldn't decode hex string: {}", e),
         Ok(bytes) => bytes,
     }
+}
+
+pub fn read_hex_file(path: &str) -> Vec<u8> {
+    decode_hex(&read_file(path))
+}
+
+pub fn read_hex_lines_file(path: &str) -> Vec<Vec<u8>> {
+    read_file(path)
+        .split('\n')
+        .map(|line| decode_hex(line))
+        .collect::<Vec<_>>()
 }
 
 pub fn bytes_to_base64(bytes: &[u8]) -> String {
@@ -41,12 +54,22 @@ pub fn decrypt_single_byte_xor(ciphertext: &[u8], key: u8) -> Vec<u8> {
 }
 
 pub fn break_single_byte_xor(ciphertext: &[u8]) -> Vec<u8> {
-    match (0..u8::MAX)
+    let (key, _) = (0..u8::MAX)
         .map(|i| score_english_plaintext(&decrypt_single_byte_xor(ciphertext, i)))
         .enumerate()
         .min_by(|(_, a), (_, b)| a.partial_cmp(b).unwrap())
-        .unwrap()
-    {
-        (key, _) => decrypt_single_byte_xor(ciphertext, key as u8),
-    }
+        .unwrap();
+
+    decrypt_single_byte_xor(ciphertext, key as u8)
+}
+
+pub fn detect_single_byte_xor(ciphertexts: &[&[u8]]) -> Vec<u8> {
+    let (_, best_text) = ciphertexts
+        .iter()
+        .map(|ciphertext| break_single_byte_xor(ciphertext))
+        .map(|plaintext| (score_english_plaintext(&plaintext), plaintext))
+        .min_by(|(a, _), (b, _)| a.partial_cmp(b).unwrap())
+        .unwrap();
+
+    best_text
 }

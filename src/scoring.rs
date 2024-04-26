@@ -33,7 +33,7 @@ fn char_frequency(c: char) -> f64 {
 }
 
 fn is_nonsense(text: &[u8]) -> bool {
-    const NONSENSE_THRESHOLD: f64 = 0.2;
+    const NONSENSE_THRESHOLD: f64 = 0.1;
     const SPACE_CHAR: u8 = 32;
 
     let allowed_nonsense_chars = text.len() as f64 * NONSENSE_THRESHOLD;

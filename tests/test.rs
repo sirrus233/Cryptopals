@@ -22,3 +22,12 @@ fn challenge_1_3_single_byte_xor_decrypt() {
     let expected = "Cooking MC's like a pound of bacon".as_bytes().to_vec();
     assert_eq!(result, expected)
 }
+
+#[test]
+fn challenge_1_4_detect_single_byte_xor() {
+    let ciphertexts = cryptopals::read_hex_lines_file("data/challenge_1_4.txt");
+    let ciphertexts = ciphertexts.iter().map(|v| v.as_slice()).collect::<Vec<_>>();
+    let result = cryptopals::detect_single_byte_xor(&ciphertexts);
+    let expected = "Now that the party is jumping\n".as_bytes().to_vec();
+    assert_eq!(result, expected)
+}

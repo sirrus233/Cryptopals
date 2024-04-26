@@ -4,7 +4,7 @@ use std::fs;
 mod scoring;
 use scoring::score_english_plaintext;
 
-fn read_file(path: &str) -> String {
+pub fn read_file(path: &str) -> String {
     match fs::read_to_string(path) {
         Err(e) => panic!("Couldn't read {}: {}", path, e),
         Ok(contents) => contents,
@@ -72,4 +72,8 @@ pub fn detect_single_byte_xor(ciphertexts: &[&[u8]]) -> Vec<u8> {
         .unwrap();
 
     best_text
+}
+
+pub fn repeating_key_xor(data: &[u8], key: &[u8]) -> Vec<u8> {
+    fixed_xor(data, &repeating_key(data, key))
 }

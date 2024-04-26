@@ -18,7 +18,7 @@ fn challenge_1_2_fixed_xor() {
 #[test]
 fn challenge_1_3_single_byte_xor_decrypt() {
     let ciphertext = cryptopals::read_hex_file("data/challenge_1_3.txt");
-    let result = cryptopals::decrypt_single_byte_xor(&ciphertext);
+    let result = cryptopals::break_single_byte_xor(&ciphertext);
     let expected = "Cooking MC's like a pound of bacon".as_bytes().to_vec();
     assert_eq!(result, expected)
 }
